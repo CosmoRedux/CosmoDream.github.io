@@ -15,7 +15,7 @@ function validate_input(code, time, stage){
     if (!(Number(code) && code.length == 4)) {
         user_message.textContent = "That is not a valid code";
         return false;
-    } else if (!(Number(time.slice(0, 2)) && Number(time.slice(3, 5)) &&  time.length == 5)) {
+    } else if (!(Number(time.slice(0, 2) + time.slice(3, 5)) &&  time.length == 5)) {
         user_message.textContent = "That is not a valid time";
         return false;
     } else if (!((Number(stage)) && (stage.length == 1) && (stage > 0) && (stage < 5))) {
@@ -98,13 +98,8 @@ function add_track(){
     track.set("code", code);
 
     if (codes.get(code)){
-        tracker_list.forEach(element => {
-            if (element.textContent === code) {
-                console.log('Found the element:', element);
-                element.remove();
-            }
-        });
-        codes.delete(code)
+        codes.get(code).remove();
+        codes.delete(code);
     }
 
     codes.set(code, element_clone);
