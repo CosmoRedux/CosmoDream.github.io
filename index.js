@@ -9,6 +9,7 @@ const tracker_list = document.getElementById("tracker-list");
 const tracker_item = document.getElementById("tracker-template");
 
 let tracker = new Map();
+const date_time = new Date();
 
 function time_to_string(time){
     let hour = Math.floor(time / 60) % 24;
@@ -99,8 +100,11 @@ function add_track(){
     let beast_display = element_clone.querySelector('.beast-display');
     beast_display.textContent = beast;
 
+    let time_compare = date_time.getTime() - date_time.getHours() * 3600000 - date_time.getMinutes() * 60000 + (time_minutes + 65) * 60000;
+    
     let track = new Map();
     track.set("time", new_time);
+    track.set("time_compare", time_compare);
     track.set("stage", next_stage);
     track.set("beast", beast);
     track.set("code", code);
@@ -132,13 +136,15 @@ function share(){
 
 setInterval(check_tracker, 1000);
 function check_tracker() {
-    let time = new Date();
-    let now_minutes = time.getHours() * 60 + time.getMinutes();
+    let time_now = date_time.getTime();
     for (let [track, data] of tracker.entries()) {
-        if (data.get("time") <= now_minutes){
+        if (data.get("time_compare") <= time_now){
             let compensation = data.get("beast") == "Hydra" ? 7 : 3;
             change_time(65 + compensation, null, track);
 
+            let time_compare = time_now - date_time.getHours() * 3600000 - date_time.getMinutes() * 60000 + data.get("time") * 60000;
+            
+            data.set("time_compare", time_compare);
             data.set("stage", (data.get("stage") % 4) + 1);
 
             let new_beast = data.get("stage") == 4 ? "Hydra" : "Sea King " + "I".repeat(data.get("stage"));
