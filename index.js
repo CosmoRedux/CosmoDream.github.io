@@ -121,7 +121,7 @@ function add_track(){
 }
 
 function share(){
-    let share_string = "Current codes in the tracker: \n";
+    let share_string = "Current codes in the tracker: \n \n";
     for (let track of tracker.values()) {
         let time = time_to_string(track.get("time"));
 
@@ -129,6 +129,7 @@ function share(){
         share_string += time + " ";
         share_string += track.get("beast") + "\n"
     }
+    share_string += "\n Made by CosmoDream (CosmoRedux on GitHub)"
     navigator.clipboard.writeText(share_string)
 }
 
