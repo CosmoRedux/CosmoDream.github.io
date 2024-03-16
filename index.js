@@ -9,7 +9,17 @@ const tracker_list = document.getElementById("tracker-list");
 const tracker_item = document.getElementById("tracker-template");
 
 let tracker = new Map();
-let codes = new Map();
+
+function time_to_string(time){
+    hour = Math.floor(time / 60);
+    minute = time % 60;
+    if (minute > 10) {
+        return String(hour) + ":" + String(minute);
+    } else {
+        console.log('2')
+        return String(hour) + ":0" + String(minute);
+    }
+}
 
 function validate_input(code, time, stage){
     if (!(Number(code) && code.length == 4)) {
@@ -33,22 +43,23 @@ function change_time(change, button, target_track){
     let time_display = track.querySelector('.time-block').querySelector('.time-display');
     let current_time = time_display.textContent;
     let time_minutes = Number(current_time.slice(0, 2)) * 60 + Number(current_time.slice(3, 5));
-    time_minutes += change
-    tracker.get(track).set("time", time_minutes)
+    time_minutes += change;
+    tracker.get(track).set("time", time_minutes);
     
-    new_time = String(Math.floor(time_minutes / 60)) + ":" + String(time_minutes % 60);
+    new_time = time_to_string(time_minutes);
     time_display.textContent = new_time;
+    sort();
 }
 
 function copy_code(button){
-    let code_display = button.parentNode.parentNode.querySelector('.code-display')
-    navigator.clipboard.writeText(code_display.textContent)
+    let code_display = button.parentNode.parentNode.querySelector('.code-display');
+    navigator.clipboard.writeText(code_display.textContent);
 }
 
 function delete_track(button){
-    let track = button.parentNode.parentNode
-    tracker.delete(track)
-    track.remove()
+    let track = button.parentNode.parentNode;
+    tracker.delete(track);
+    track.remove();
 }
 
 function sort(){
@@ -75,7 +86,7 @@ function add_track(){
 
     let time_minutes = Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
     let new_time = (time_minutes + 65) % 1440;
-    let new_time_string = String(Math.floor(new_time / 60)) + ":" + String(new_time % 60);
+    let new_time_string = time_to_string(new_time);
 
     let element_clone = tracker_item.cloneNode(true);
     element_clone.style.display = "grid";
@@ -97,24 +108,22 @@ function add_track(){
     track.set("beast", beast);
     track.set("code", code);
 
-    if (codes.get(code)){
-        codes.get(code).remove();
-        codes.delete(code);
+    for (let [track, data] of tracker.entries()) {
+        if (data.get("code") == code) {
+            track.remove();
+        }
     }
 
-    codes.set(code, element_clone);
     tracker.set(element_clone, track);
 
     tracker_list.appendChild(element_clone);
     sort();
-
-    console.log(codes);
 }
 
 function share(){
     let share_string = "Current codes in the tracker: \n";
     for (let track of tracker.values()) {
-        let time = String(Math.floor(track.get("time") / 60)) + ":" + String(track.get("time") % 60);
+        let time = time_to_string(track.get("time"));
 
         share_string += track.get("code") + " ";
         share_string += time + " ";
