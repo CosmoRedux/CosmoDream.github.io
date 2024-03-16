@@ -11,14 +11,11 @@ const tracker_item = document.getElementById("tracker-template");
 let tracker = new Map();
 
 function time_to_string(time){
-    hour = Math.floor(time / 60);
-    minute = time % 60;
-    if (minute >= 10) {
-        return String(hour) + ":" + String(minute);
-    } else {
-        console.log('2')
-        return String(hour) + ":0" + String(minute);
-    }
+    let hour = Math.floor(time / 60) % 24;
+    let minute = time % 60;
+    let str_hour = hour < 10 ? "0" + String(hour) : String(hour);
+    let str_min = minute < 10 ? "0" + String(minute) : String(minute);
+    return str_hour + ":" + str_min
 }
 
 function validate_input(code, time, stage){
@@ -46,7 +43,7 @@ function change_time(change, button, target_track){
     time_minutes += change;
     tracker.get(track).set("time", time_minutes);
     
-    new_time = time_to_string(time_minutes);
+    let new_time = time_to_string(time_minutes);
     time_display.textContent = new_time;
     sort();
 }
