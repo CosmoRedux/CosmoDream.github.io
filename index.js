@@ -13,7 +13,7 @@ let tracker = new Map();
 function time_to_string(time){
     hour = Math.floor(time / 60);
     minute = time % 60;
-    if (minute > 10) {
+    if (minute >= 10) {
         return String(hour) + ":" + String(minute);
     } else {
         console.log('2')
