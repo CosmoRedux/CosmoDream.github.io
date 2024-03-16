@@ -70,7 +70,7 @@ function add_track(){
         return;
     }
 
-    let next_stage = Number(stage) + 1;
+    let next_stage = (Number(stage) % 4) + 1;
     let beast = next_stage == 4 ? "Hydra" : "Sea King ".concat("I".repeat(next_stage));
 
     let time_minutes = Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
