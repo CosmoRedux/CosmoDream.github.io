@@ -98,9 +98,13 @@ function add_track(){
     track.set("code", code);
 
     if (codes.get(code)){
-        let old_track = codes.get(code);
-        old_track.remove();
-        codes.delete(code);
+        tracker_list.forEach(element => {
+            if (element.textContent === code) {
+                console.log('Found the element:', element);
+                element.remove();
+            }
+        });
+        codes.delete(code)
     }
 
     codes.set(code, element_clone);
