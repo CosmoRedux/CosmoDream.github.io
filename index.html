@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>King Legacy Trackers</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <ul id="nav-bar">
+            <li>
+                <a href="index.html">Tracker</a>
+            </li>
+            <li>
+                <a href="item-wiki.html">Item Wiki</a>
+            </li>
+            <li>
+                <a href="value-converter.html">Value Converter</a>
+            </li>
+            <li>
+                <a  href="combo-creator.html">Combo Creator</a>
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <div id="input-holder" >
+            <label for="code-input">Code: </label>
+            <input type="text" style="width: 4ch;" id="code-input">
+
+            <label for="time-input">Time: </label>
+            <input type="text" style="width: 5ch;" id="time-input">
+
+            <label for="stage-input">Stage: </label>
+            <input type="text" style="width: 1ch;" id="stage-input">
+
+            <button id="add-item" onclick="add_track()"> Add </button>
+            <button id="share-list"> Share </button>
+
+        </div>
+
+        <div id="user-message" style="text-align: center; margin-top: 1%; font-size: 1.5em;"></div>
+
+        <div id="tracker-list">
+            <div id="tracker-template" style="display: none;">
+                <p class="code-display">9999</p>
+                <div class="time-block" style="display: grid; grid-template-columns: 3fr 1fr 1fr;">
+                    <p class="time-display">24:00</p>
+                    <button class="add-time" onclick="change_time(1, this)">+</button>
+                    <button class="sub-time" onclick="change_time(-1, this)">-</button>
+                </div>
+                <p class="beast-display">Hydra</p>
+                <div class="copy-delete" style="display: grid; grid-template-columns: 1fr 1fr;">
+                    <button onclick="copy_code(this)">Copy</button>
+                    <button style="border-top-right-radius: 8px; border-bottom-right-radius: 8px;" onclick="delete_track(this)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="credits">Made by CosmoDream</div>
+    <script src="index.js"></script>
+</body>
+</html>
