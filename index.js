@@ -8,9 +8,8 @@ const user_message = document.getElementById("user-message");
 const tracker_list = document.getElementById("tracker-list");
 const tracker_item = document.getElementById("tracker-template");
 
-const tracker = new Map();
-
-const delay = ms => new Promise(res => setTimeout(res, ms));
+let tracker = new Map();
+let codes = new Map();
 
 function validate_input(code, time, stage){
     if (!(Number(code) && code.length == 4)) {
@@ -29,13 +28,11 @@ function validate_input(code, time, stage){
 
 }
 
-function change_time(change, button){
-    let track = button.parentNode.parentNode;
-    let time_display = button.parentNode.querySelector('.time-display');
+function change_time(change, button, target_track){
+    let track = target_track || button.parentNode.parentNode;
+    let time_display = track.querySelector('.time-block').querySelector('.time-display');
     let current_time = time_display.textContent;
     let time_minutes = Number(current_time.slice(0, 2)) * 60 + Number(current_time.slice(3, 5));
-    
-    console.log(time_minutes, change)
     time_minutes += change
     tracker.get(track).set("time", time_minutes)
     
@@ -55,7 +52,12 @@ function delete_track(button){
 }
 
 function sort(){
+    let array = [...tracker.entries()];
+    tracker = new Map(array.sort((a, b) => a[1].get("time") - b[1].get("time")));
 
+    for (let track of tracker.keys()) {
+        tracker_list.appendChild(track);
+    }
 }
 
 function add_track(){
@@ -89,20 +91,55 @@ function add_track(){
     let beast_display = element_clone.querySelector('.beast-display');
     beast_display.textContent = beast;
 
-
     let track = new Map();
     track.set("time", new_time);
     track.set("stage", next_stage);
     track.set("beast", beast);
     track.set("code", code);
 
+    if (codes.get(code)){
+        let old_track = codes.get(code);
+        old_track.remove();
+        codes.delete(code);
+    }
+
+    codes.set(code, element_clone);
     tracker.set(element_clone, track);
-    console.log(tracker);
 
     tracker_list.appendChild(element_clone);
+    sort();
+
+    console.log(codes);
+}
+
+function share(){
+    let share_string = "Current codes in the tracker: \n";
+    for (let track of tracker.values()) {
+        let time = String(Math.floor(track.get("time") / 60)) + ":" + String(track.get("time") % 60);
+
+        share_string += track.get("code") + " ";
+        share_string += time + " ";
+        share_string += track.get("beast") + "\n"
+    }
+    navigator.clipboard.writeText(share_string)
 }
 
 setInterval(check_tracker, 1000);
 function check_tracker() {
-    
+    let time = new Date();
+    let now_minutes = time.getHours() * 60 + time.getMinutes();
+    for (let [track, data] of tracker.entries()) {
+        if (data.get("time") <= now_minutes){
+            let compensation = data.get("beast") == "Hydra" ? 7 : 3;
+            change_time(65 + compensation, null, track);
+
+            data.set("stage", (data.get("stage") % 4) + 1);
+
+            let new_beast = data.get("stage") == 4 ? "Hydra" : "Sea King " + "I".repeat(data.get("stage"));
+            data.set("beast", new_beast);
+            track.querySelector(".beast-display").textContent = new_beast;
+            
+            sort();
+        }
+    }
 }
