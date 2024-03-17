@@ -9,7 +9,6 @@ const tracker_list = document.getElementById("tracker-list");
 const tracker_item = document.getElementById("tracker-template");
 
 let tracker = new Map();
-const date_time = new Date();
 
 function time_to_string(time){
     let hour = Math.floor(time / 60) % 24;
@@ -70,6 +69,7 @@ function sort(){
 }
 
 function add_track(){
+    const date_time = new Date();
     let code = code_input.value;
     let time = time_input.value;
     let stage = stage_input.value;
@@ -136,6 +136,7 @@ function share(){
 
 setInterval(check_tracker, 1000);
 function check_tracker() {
+    const date_time = new Date();
     let time_now = date_time.getTime();
     for (let [track, data] of tracker.entries()) {
         if (data.get("time_compare") <= time_now){
