@@ -101,7 +101,7 @@ function add_track(){
     beast_display.textContent = beast;
 
     let time_compare = date_time.getTime() - date_time.getHours() * 3600000 - date_time.getMinutes() * 60000 + (time_minutes + 65) * 60000;
-    
+
     let track = new Map();
     track.set("time", new_time);
     track.set("time_compare", time_compare);
@@ -150,8 +150,11 @@ function check_tracker() {
             let new_beast = data.get("stage") == 4 ? "Hydra" : "Sea King " + "I".repeat(data.get("stage"));
             data.set("beast", new_beast);
             track.querySelector(".beast-display").textContent = new_beast;
-            
+            track.style["background-color"] = "#999";
+
             sort();
+        } else if (data.get("time_compare") - 5 * 60000 <= time_now) {
+            track.style["background-color"] = "#595";
         }
     }
 }
